@@ -1,0 +1,177 @@
+# Hybrid Quantum Circuit Simulator - Project Guide
+# For use with AI code editors like Cursor
+
+## PROJECT OVERVIEW
+
+This project implements a hybrid quantum circuit simulator that efficiently handles various types of quantum circuits by dynamically selecting the most appropriate simulation method. The architecture integrates:
+
+1. Block Simulation - For structured circuits with localized operations
+2. Tensor Network Methods - For circuits with high entanglement
+3. Sparse Representation & Hash Maps - For tracking nonzero state amplitudes
+4. Parallelization and GPU Acceleration - For efficient handling of large systems
+
+## ARCHITECTURE
+
+The simulator is organized around these core components:
+
+- **Core Components** (`qsim/core/`): Basic building blocks like `QuantumCircuit` and `Qudit`
+- **Quantum Gates** (`qsim/gates/`): Various gate implementations (Hadamard, Phase, Permutation, Controlled)
+- **Quantum State Representations** (`qsim/states/`): `StateVector`, `SparseStateVector`, `TensorNetworkState`
+- **Circuit Analysis** (`qsim/analysis/`): `CircuitAnalyzer` for determining optimal simulation strategies
+- **Execution Management** (`qsim/execution/`): `HybridExecutionManager` and `HybridQuantumSimulator`
+- **Utilities** (`qsim/utils/`): Helper functions and circuit builders
+
+The system dynamically analyzes circuits to determine whether to use block simulation (for sparse/localized circuits), tensor networks (for highly entangled circuits), or other methods based on circuit properties.
+
+## CODE ORGANIZATION
+
+The project follows a modular package structure:
+
+```
+qsim/
+├── __init__.py       # Package initialization and exports
+├── main.py           # Main demonstration script
+├── core/             # Core components
+│   ├── __init__.py
+│   ├── circuit.py    # QuantumCircuit implementation
+│   └── qudit.py      # Qudit implementation
+├── gates/            # Quantum gate implementations
+│   ├── __init__.py
+│   ├── gate.py       # Base Gate class
+│   ├── hadamard.py   # Hadamard gate
+│   ├── phase.py      # Phase gate
+│   ├── permutation.py # Permutation gate
+│   └── controlled.py # Controlled gate
+├── states/           # Quantum state representations
+│   ├── __init__.py
+│   ├── state.py      # Base QuantumState class
+│   ├── state_vector.py # Dense state vector
+│   ├── sparse_state_vector.py # Sparse state vector
+│   └── tensor_network_state.py # Tensor network state
+├── analysis/         # Circuit analysis
+│   ├── __init__.py
+│   └── circuit_analyzer.py # Circuit analysis tools
+├── execution/        # Execution management
+│   ├── __init__.py
+│   ├── hybrid_execution_manager.py # Hybrid execution
+│   └── simulator.py  # Main simulator class
+└── utils/            # Utility functions
+    ├── __init__.py
+    └── circuit_builders.py # Common circuit builders
+```
+
+Additional project files:
+- `setup.py` and `pyproject.toml` - Package configuration
+- `README.md` - Project documentation
+- `LICENSE` - MIT license
+- `Makefile` - Development tasks
+- `pytest.ini`, `.flake8`, `mypy.ini` - Testing and linting configuration
+
+## CODING STANDARDS
+
+### Naming Conventions
+
+- Classes: PascalCase (e.g., `StateVector`, `HadamardGate`)
+- Methods/Functions: snake_case (e.g., `apply_gate`, `get_probabilities`)
+- Variables: snake_case (e.g., `qudit_index`, `amplitude`)
+- Constants: UPPER_SNAKE_CASE (e.g., `TENSOR_NETWORK_THRESHOLD`)
+- Modules: snake_case (e.g., `circuit_analyzer.py`, `state_vector.py`)
+
+### Type Annotations
+
+Use Python type hints for all function/method signatures:
+
+```python
+def get_probability(self, index: int) -> float:
+    """Get the probability of measuring a specific computational basis state."""
+```
+
+### Documentation
+
+- All classes and public methods must have docstrings using Google-style format
+- Include Args, Returns, and Raises sections where appropriate
+- Complex algorithms should have inline comments explaining the approach
+- Module-level docstrings should describe the purpose of the module
+
+Example docstring:
+
+```python
+def apply_gate(self, gate: Gate) -> None:
+    """
+    Apply a quantum gate to the state vector.
+    
+    Args:
+        gate: The quantum gate to apply
+        
+    Raises:
+        ValueError: If the gate acts on qubits not in the system
+    """
+```
+
+### Error Handling
+
+- Use specific exception types with informative error messages
+- Check for invalid inputs early in functions
+- Log failures with appropriate severity levels
+
+### Code Formatting
+
+- 4 spaces for indentation (no tabs)
+- Maximum line length of 100 characters
+- Group imports by standard library, third-party, and local modules
+- Add blank lines to separate logical sections
+- Use Black and isort for consistent formatting
+
+### Testing
+
+- Write unit tests for all components using pytest
+- Test files should be in the `tests/` directory
+- Test files should be named `test_*.py`
+- Test classes should be named `Test*`
+- Test methods should be named `test_*`
+
+### Performance Considerations
+
+- Prefer NumPy vectorized operations over explicit loops
+- Use sparse representations for states with many zero amplitudes
+- Leverage GPU acceleration for tensor operations when available
+- Avoid unnecessary object creation within tight loops
+
+## QUANTUM COMPUTING CONVENTIONS
+
+### State Representation
+
+- State vectors use the computational basis ordering: |00...0⟩, |00...1⟩, ..., |11...1⟩
+- For multi-qudit systems, the rightmost qudit has the lowest significance in indices
+- States are normalized such that the sum of probability amplitudes squared equals 1
+
+### Gates and Operations
+
+- Gates are represented by their matrix form in the computational basis
+- Multi-qudit gates specify their target qudits explicitly
+- The simulator supports qudits of arbitrary dimensions (not just qubits)
+- Controlled operations specify both control qudits and their required values
+
+## DEVELOPMENT WORKFLOW
+
+### Environment Setup
+
+- Use uv for package management and virtual environments
+- Install development dependencies with `uv pip install -e ".[dev]"` or `make dev-setup`
+- Run tests with `pytest` or `make test`
+- Format code with `black` and `isort` or `make format`
+- Lint code with `flake8` and `mypy` or `make lint`
+
+### Continuous Integration
+
+- Run tests before committing changes
+- Ensure all linting checks pass
+- Keep test coverage high
+
+## IMPLEMENTATION PRIORITIES
+
+1. Correctness - The simulator must produce mathematically accurate results
+2. Efficiency - The implementation should optimize for both time and memory
+3. Readability - Code should be clear and well-documented
+4. Extensibility - New gate types and simulation methods should be easy to add
+
