@@ -1,5 +1,4 @@
-# Hybrid Quantum Circuit Simulator - Project Guide
-# For use with AI code editors like Cursor
+# Hybrid Quantum Circuit Simulator (qsim)
 
 ## PROJECT OVERVIEW
 
@@ -9,6 +8,8 @@ This project implements a hybrid quantum circuit simulator that efficiently hand
 2. Tensor Network Methods - For circuits with high entanglement
 3. Sparse Representation & Hash Maps - For tracking nonzero state amplitudes
 4. Parallelization and GPU Acceleration - For efficient handling of large systems
+
+The simulator supports arbitrary qudit dimensions, not just qubits, making it versatile for simulating a wide range of quantum systems.
 
 ## ARCHITECTURE
 
@@ -20,6 +21,8 @@ The simulator is organized around these core components:
 - **Circuit Analysis** (`qsim/analysis/`): `CircuitAnalyzer` for determining optimal simulation strategies
 - **Execution Management** (`qsim/execution/`): `HybridExecutionManager` and `HybridQuantumSimulator`
 - **Utilities** (`qsim/utils/`): Helper functions and circuit builders
+- **Benchmarks** (`benchmarks/`): Performance benchmarking tools for evaluating simulator efficiency
+- **Examples** (`examples/`): Example scripts demonstrating simulator capabilities
 
 The system dynamically analyzes circuits to determine whether to use block simulation (for sparse/localized circuits), tensor networks (for highly entangled circuits), or other methods based on circuit properties.
 
@@ -58,6 +61,18 @@ qsim/
 └── utils/            # Utility functions
     ├── __init__.py
     └── circuit_builders.py # Common circuit builders
+examples/             # Example scripts
+├── basic_usage.py    # Basic usage examples
+├── grovers_search.py # Grover's search algorithm implementation
+├── hybrid_simulation_benchmark.py # Benchmark for hybrid simulation
+├── multi_qudit_simulation.py # Multi-qudit simulation examples
+├── quantum_error_correction.py # Quantum error correction examples
+├── quantum_phase_estimation.py # Quantum phase estimation algorithm
+└── variational_quantum_eigensolver.py # VQE algorithm implementation
+benchmarks/           # Performance benchmarks
+├── scaling_ghz.py    # GHZ state scaling benchmark
+└── plots/            # Directory for benchmark plots
+tests/                # Test suite
 ```
 
 Additional project files:
@@ -136,6 +151,7 @@ def apply_gate(self, gate: Gate) -> None:
 - Use sparse representations for states with many zero amplitudes
 - Leverage GPU acceleration for tensor operations when available
 - Avoid unnecessary object creation within tight loops
+- Use benchmarking tools to identify performance bottlenecks
 
 ## QUANTUM COMPUTING CONVENTIONS
 
@@ -152,6 +168,22 @@ def apply_gate(self, gate: Gate) -> None:
 - The simulator supports qudits of arbitrary dimensions (not just qubits)
 - Controlled operations specify both control qudits and their required values
 
+### Multi-Qudit Support
+
+- The system supports qudits of arbitrary dimension (d ≥ 2)
+- Qudits can have different dimensions within the same circuit
+- Gate implementations handle arbitrary qudit dimensions
+- Special handling for higher-dimensional generalizations of standard gates
+
+## BENCHMARKING
+
+The project includes comprehensive benchmarking tools to evaluate performance:
+
+- **GHZ State Scaling**: Tests how well the simulator scales with increasing system size
+- **Hybrid Simulation Benchmark**: Compares different simulation methods on various circuit types
+- **Performance Metrics**: Measures execution time, memory usage, and simulation accuracy
+- **Visualization**: Generates plots to visualize performance characteristics
+
 ## DEVELOPMENT WORKFLOW
 
 ### Environment Setup
@@ -161,6 +193,13 @@ def apply_gate(self, gate: Gate) -> None:
 - Run tests with `pytest` or `make test`
 - Format code with `black` and `isort` or `make format`
 - Lint code with `flake8` and `mypy` or `make lint`
+
+### Running Examples and Benchmarks
+
+- Basic examples: `python -m qsim.main` or `python examples/basic_usage.py`
+- Advanced examples: `python examples/quantum_phase_estimation.py`, etc.
+- Run all examples: `make examples`
+- Run benchmarks: `python benchmarks/scaling_ghz.py --output-dir=benchmarks/plots`
 
 ### Continuous Integration
 
