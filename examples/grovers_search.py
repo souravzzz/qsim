@@ -198,6 +198,22 @@ def calculate_optimal_iterations(num_qubits: int) -> int:
     return int(np.round(np.pi / 4 * np.sqrt(N)))
 
 
+def calculate_theoretical_success_probability(num_qubits: int, num_iterations: int) -> float:
+    """
+    Calculate the theoretical success probability of Grover's algorithm.
+
+    Args:
+        num_qubits: Number of qubits in the circuit
+        num_iterations: Number of Grover iterations performed
+
+    Returns:
+        The theoretical success probability
+    """
+    N = 2**num_qubits
+    theta = np.arcsin(1 / np.sqrt(N))
+    return np.sin((2 * num_iterations + 1) * theta) ** 2
+
+
 def main():
     """Run the Grover's search algorithm example."""
     # Parameters
@@ -215,6 +231,10 @@ def main():
     print(f"Search space size: {2**num_qubits}")
     print(f"Marked state: |{marked_state}⟩")
     print(f"Optimal number of iterations: {optimal_iterations}")
+
+    # Calculate theoretical success probability
+    theoretical_prob = calculate_theoretical_success_probability(num_qubits, optimal_iterations)
+    print(f"Theoretical success probability: {theoretical_prob:.4f}")
 
     # Create the circuit
     circuit = create_grovers_circuit(num_qubits, marked_state, optimal_iterations)
@@ -240,7 +260,16 @@ def main():
     # Calculate success probability
     if marked_state in results:
         success_prob = results[marked_state] / num_shots
-        print(f"\nSuccess probability: {success_prob:.4f}")
+        print(f"\nMeasured success probability: {success_prob:.4f}")
+        print(f"Theoretical success probability: {theoretical_prob:.4f}")
+        print(f"Difference: {abs(success_prob - theoretical_prob):.4f}")
+
+        # Check if the measured probability is close to theoretical
+        tolerance = 0.1  # 10% tolerance
+        if abs(success_prob - theoretical_prob) <= tolerance * theoretical_prob:
+            print("✓ Implementation matches theoretical prediction within tolerance")
+        else:
+            print("✗ Implementation deviates from theoretical prediction beyond tolerance")
     else:
         print("\nMarked state was not found in any measurements!")
 

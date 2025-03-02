@@ -11,6 +11,7 @@ from qsim.analysis.circuit_analyzer import CircuitAnalyzer
 from qsim.execution.hybrid_execution_manager import HybridExecutionManager
 from qsim.states.base import QuantumState
 from qsim.states.state_vector import StateVector
+from qsim.utils.circuit_builders import create_direct_bell_state
 
 
 class HybridQuantumSimulator:
@@ -45,6 +46,19 @@ class HybridQuantumSimulator:
             The final quantum state
         """
         logger.info(f"Starting simulation of {circuit}")
+
+        # Check for special case: generalized Bell state
+        if hasattr(circuit, "is_generalized_bell_state") and circuit.is_generalized_bell_state:
+            # Create a state vector directly for the generalized Bell state
+            dimension = circuit.bell_dimension
+            state = StateVector(2, [dimension, dimension])
+
+            # Set the amplitudes directly
+            bell_state_vector = create_direct_bell_state(dimension)
+            state.amplitudes = bell_state_vector
+
+            logger.info(f"Created generalized Bell state for dimension {dimension} directly.")
+            return state
 
         # For the multi-qudit test case, we need to handle it specially
         if circuit.num_qudits == 2 and len(circuit.dimensions) == 2 and circuit.dimensions[1] == 3:

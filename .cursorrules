@@ -37,17 +37,20 @@ qsim/
 ├── core/             # Core components
 │   ├── __init__.py
 │   ├── circuit.py    # QuantumCircuit implementation
+│   ├── config.py     # Configuration settings
+│   ├── constants.py  # Constant values
 │   └── qudit.py      # Qudit implementation
 ├── gates/            # Quantum gate implementations
 │   ├── __init__.py
-│   ├── gate.py       # Base Gate class
+│   ├── base.py       # Base Gate class
 │   ├── hadamard.py   # Hadamard gate
 │   ├── phase.py      # Phase gate
 │   ├── permutation.py # Permutation gate
-│   └── controlled.py # Controlled gate
+│   ├── controlled.py # Controlled gate
+│   └── multi_controlled.py # Multi-controlled gate
 ├── states/           # Quantum state representations
 │   ├── __init__.py
-│   ├── state.py      # Base QuantumState class
+│   ├── base.py       # Base QuantumState class
 │   ├── state_vector.py # Dense state vector
 │   ├── sparse_state_vector.py # Sparse state vector
 │   └── tensor_network_state.py # Tensor network state
@@ -58,10 +61,14 @@ qsim/
 │   ├── __init__.py
 │   ├── hybrid_execution_manager.py # Hybrid execution
 │   └── simulator.py  # Main simulator class
-└── utils/            # Utility functions
-    ├── __init__.py
-    └── circuit_builders.py # Common circuit builders
+├── utils/            # Utility functions
+│   ├── __init__.py
+│   └── circuit_builders.py # Common circuit builders
+docs/                 # Documentation
+└── components.md     # Core components and their interfaces
 examples/             # Example scripts
+├── __init__.py
+├── README.md         # Examples documentation
 ├── basic_usage.py    # Basic usage examples
 ├── grovers_search.py # Grover's search algorithm implementation
 ├── hybrid_simulation_benchmark.py # Benchmark for hybrid simulation
@@ -73,6 +80,18 @@ benchmarks/           # Performance benchmarks
 ├── scaling_ghz.py    # GHZ state scaling benchmark
 └── plots/            # Directory for benchmark plots
 tests/                # Test suite
+├── __init__.py
+├── README.md         # Testing documentation
+├── test_analysis.py  # Tests for analysis module
+├── test_bell_state.py # Tests for Bell state creation
+├── test_circuit_builders.py # Tests for circuit builders
+├── test_core.py      # Tests for core components
+├── test_execution.py # Tests for execution management
+├── test_gates.py     # Tests for quantum gates
+├── test_generalized_bell_state.py # Tests for generalized Bell states
+├── test_grovers_search.py # Tests for Grover's search implementation
+├── test_multi_controlled_gate.py # Tests for multi-controlled gates
+└── test_states.py    # Tests for quantum state representations
 ```
 
 Additional project files:
@@ -81,6 +100,9 @@ Additional project files:
 - `LICENSE` - MIT license
 - `Makefile` - Development tasks
 - `pytest.ini`, `.flake8`, `mypy.ini` - Testing and linting configuration
+- `run_tests.py` - Script to run tests
+- `.python-version` - Python version specification
+- `uv.lock` - Dependency lock file
 
 ## CODING STANDARDS
 
